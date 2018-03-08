@@ -2,7 +2,7 @@
 
     This is a simple observer which listen to changes on any object. This changes can only be asignations like the following:
 
-    ```
+    ```js
         const objectToObserve = {
             a: 1
         };
@@ -16,19 +16,19 @@
 
 ## To run
 
-    ```
+    ```sh
         npm start
     ```
 
 ## To test
 
-    ```
+    ```sh
         npm test
     ```
 
 ## Examples of use
 
-    ```
+    ```js
         const Observer = require('object_observer');
 
         const objectToObserve = {
