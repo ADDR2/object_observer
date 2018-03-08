@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha tests/**/*.test.js",
+    "test": "npm i && node_modules/mocha/bin/mocha tests/**/*.test.js",
     "start": "node index.js"
   },
   "author": "Amaro Duarte",
