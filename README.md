@@ -12,7 +12,7 @@ objectToObserve.a = 2;
 
 ## Dependencies
 
-    Only depends on ``events`` node module, which does not need to be installed. And ES6 support.
+Only depends on ``events`` node module, which does not need to be installed. And ES6 support.
 
 ## To run
 
