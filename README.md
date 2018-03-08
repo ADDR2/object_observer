@@ -1,6 +1,6 @@
 # object_observer
 
-This is a simple observer which listen to changes on any object. This changes can only be asignations like the following:
+This is a simple observer which listens to changes on any object. These changes can only be asignations like the following:
 
 ```js
 const objectToObserve = {
