@@ -29,7 +29,7 @@ npm test
 ## Examples of use
 
 ```js
-const Observer = require('object_observer');
+const Observer = require('@addr/object_observer');
 
 const objectToObserve = {
     a: 1
