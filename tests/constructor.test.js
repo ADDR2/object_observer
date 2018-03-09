@@ -17,15 +17,14 @@ describe('Observer constructor', () => {
             {a: 1, b: 2},
             new Error("I'm the error"),
             new Promise((resolve, reject) => resolve()),
-            new Promise((resolve, reject) => reject()),
-            []
+            [],
+            undefined
         ];
 
         objectsToTest.forEach(object => {
-            expect(typeof object).to.eq('object');
-
             const observer = new Observer(object);
 
+            expect(typeof observer.getObject()).to.eq('object');
             expect(Object.keys(observer)).to.have.lengthOf(3);
             expect(observer).to.have.all.keys('emitter', 'callbacks', 'object');
             expect(observer.emitter).to.exist;
@@ -48,7 +47,6 @@ describe('Observer constructor', () => {
             `String`,
             function (){},
             () => {},
-            undefined,
             NaN
         ];
 
@@ -68,21 +66,51 @@ describe('Observer constructor', () => {
             {a: 1, b: 2},
             new Error("I'm the error"),
             new Promise((resolve, reject) => resolve()),
-            new Promise((resolve, reject) => reject()),
             []
         ];
 
         const createObserverSpy = Sandbox.spy(Observer.prototype, 'createObserver');
 
         objectsToTest.forEach(object => {
-            expect(typeof object).to.eq('object');
-
             const observer = new Observer(object);
 
+            expect(typeof observer.getObject()).to.eq('object');
             expect(createObserverSpy.callCount).to.eq(1);
             expect(createObserverSpy.getCall(0).args[0]).to.deep.eq(object);
 
             createObserverSpy.reset();
         });
+    });
+
+    it('should create proxy for empty object when nothing passed as argument', () => {
+        const observer = new Observer();
+
+
+        expect(typeof observer.getObject()).to.eq('object');
+        expect(Object.keys(observer)).to.have.lengthOf(3);
+        expect(observer).to.have.all.keys('emitter', 'callbacks', 'object');
+        expect(observer.emitter).to.exist;
+        expect(observer.callbacks).to.exist;
+        expect(observer.object).to.exist;
+        expect(observer).to.be.an.instanceOf(Observer);
+        expect(observer.emitter).to.be.an.instanceOf(EventEmitter);
+        expect(observer.callbacks).to.deep.eq({});
+        expect(typeof observer.object).to.eq('object');
+    });
+
+    it('should create proxy for empty object when undefined passed as argument', () => {
+        const observer = new Observer(undefined);
+
+
+        expect(typeof observer.getObject()).to.eq('object');
+        expect(Object.keys(observer)).to.have.lengthOf(3);
+        expect(observer).to.have.all.keys('emitter', 'callbacks', 'object');
+        expect(observer.emitter).to.exist;
+        expect(observer.callbacks).to.exist;
+        expect(observer.object).to.exist;
+        expect(observer).to.be.an.instanceOf(Observer);
+        expect(observer.emitter).to.be.an.instanceOf(EventEmitter);
+        expect(observer.callbacks).to.deep.eq({});
+        expect(typeof observer.object).to.eq('object');
     });
 });

@@ -42,8 +42,8 @@ class Observer {
         const handler = {
             set: (obj, prop, value) => {
                 try {
-                    this.emitter.emit(`changeOn${prop}`, value, prop);
-                    return Reflect.set(...arguments);
+                    this.emitter.emit(`changeOn${prop}`, value, prop, obj? obj[prop] : null);
+                    return Reflect.set(obj, prop, value);
                 } catch(error) {
                     throw error;
                 }
