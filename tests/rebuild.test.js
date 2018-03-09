@@ -1,5 +1,4 @@
 const { expect } = require('chai');
-const { sandbox } = require('sinon');
 const EventEmitter = require('events');
 
 const Observer = require('../index.js');

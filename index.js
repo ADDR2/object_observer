@@ -23,6 +23,7 @@ class Observer {
     subscribe(prop = '', callback = null) {
         if(typeof prop !== 'string' && typeof prop !== 'number') throw new Error('Properties must be numbers or strings');
         if(typeof callback !== 'function') throw new Error('You must provide a function');
+        if(`changeOn${prop}` in this.callbacks) this.unsubscribe(prop);
 
         this.emitter.on(`changeOn${prop}`, callback);
         this.callbacks[`changeOn${prop}`] = callback;
