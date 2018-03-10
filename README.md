@@ -128,8 +128,96 @@ resultObject.a = 3;
 // Nothing gets printed
 ```
 
+To overwrite the change after it happened:
+
+```js
+const Observer = require('@addr/object_observer');
+
+const objectToObserve = {
+    a: 1
+};
+
+const observer = new Observer(objectToObserve);
+const resultObject = observer.getObject(); // { a: 1 } Same object
+
+observer.handle('a', (newValue, propName, oldValue, object) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${object[propName]} << to >> ${newValue} <<`);
+    object[propName] = 4;
+});
+
+observer.subscribe('a', (newValue, propName, oldValue) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${objectToObserve[propName]} << to >> ${newValue} <<`);
+});
+
+resultObject.a = 3;
+// Prop >> a << just changed from >> 1 << to >> 3 <<
+// Prop >> a << just changed from >> 3 << to >> 3 <<
+
+console.log(resultObject);
+// { a: 4 }
+```
+
+To rollback the change after it happened:
+
+```js
+const Observer = require('@addr/object_observer');
+
+const objectToObserve = {
+    a: 1
+};
+
+const observer = new Observer(objectToObserve);
+const resultObject = observer.getObject(); // { a: 1 } Same object
+
+observer.handle('a', (newValue, propName, oldValue, object) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${object[propName]} << to >> ${newValue} <<`);
+    return true;
+});
+
+observer.subscribe('a', (newValue, propName, oldValue) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${objectToObserve[propName]} << to >> ${newValue} <<`);
+});
+
+resultObject.a = 3;
+// Prop >> a << just changed from >> 1 << to >> 3 <<
+// Prop >> a << just changed from >> 3 << to >> 3 <<
+
+console.log(resultObject);
+// { a: 1 }
+```
+
+To remove handle listener:
+
+```js
+const Observer = require('@addr/object_observer');
+
+const objectToObserve = {
+    a: 1
+};
+
+const observer = new Observer(objectToObserve);
+const resultObject = observer.getObject(); // { a: 1 } Same object
+
+observer.handle('a', (newValue, propName, oldValue, object) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${object[propName]} << to >> ${newValue} <<`);
+    return true;
+});
+
+observer.subscribe('a', (newValue, propName, oldValue) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${objectToObserve[propName]} << to >> ${newValue} <<`);
+});
+
+observer.unhandle('a');
+
+resultObject.a = 3;
+// Prop >> a << just changed from >> 1 << to >> 3 <<
+
+console.log(resultObject);
+// { a: 3 }
+```
+
 ## Next step
 
-Currently, this listeners are triggered before the change happens. That might help you to do something before any change,
+DONE: Currently, this listeners are triggered before the change happens. That might help you to do something before any change,
 but what happens if you want to overwrite/improve that change. Well, I'll be adding a new listener with a callback called
 after the change happens, so this way you can overwrite it or just return true and rollback te change.
