@@ -1,5 +1,6 @@
 const { expect } = require('chai');
 const { sandbox } = require('sinon');
+
 const Observer = require('../index.js');
 
 describe('Observer subscribe', () => {
@@ -73,5 +74,52 @@ describe('Observer subscribe', () => {
             expect(error.message).to.eq('Properties must be numbers or strings');
         }
     });
+
+    it('should throw error if not valid callback', () => {
+        const valuesToTest = [
+            1,
+            true,
+            2.890,
+            "String",
+            'String',
+            `String`,
+            NaN,
+            undefined,
+            null,
+            {},
+            [],
+            new Error()
+        ];
+
+        valuesToTest.forEach(value => {
+            try {
+                this.observer.subscribe(1, value);
+            } catch(error) {
+                expect(error).to.be.an.instanceOf(Error);
+                expect(error.message).to.eq('You must provide a function');
+            }
+        });
+    });
     
+    it('should throw error if callback not passed as argument', () => {
+        try {
+            this.observer.subscribe(1);
+        } catch(error) {
+            expect(error).to.be.an.instanceOf(Error);
+            expect(error.message).to.eq('You must provide a function');
+        }
+    });
+
+    it('should behave normally if not passed a prop', () => {
+
+        this.observer.subscribe(undefined, () => {});
+
+        const resultObject = this.observer.getObject();
+        const events = this.observer.emitter.eventNames();
+        expect(events).to.have.lengthOf(1);
+        expect(events[0]).to.eq('changeOn');
+        expect(Object.keys(this.observer.callbacks)).to.have.lengthOf(1);
+        expect(this.observer.callbacks).to.have.all.keys('changeOn');
+    });
+
 });

@@ -127,3 +127,9 @@ resultObject.a = 3;
 
 // Nothing gets printed
 ```
+
+## Next step
+
+Currently, this listeners are triggered before the change happens. That might help you to do something before any change,
+but what happens if you want to overwrite/improve that change. Well, I'll be adding a new listener with a callback called
+after the change happens, so this way you can overwrite it or just return true and rollback te change.
