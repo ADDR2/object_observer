@@ -273,3 +273,24 @@ console.log(resultObject);
 ```
 
 Instead, use the ``object`` parameter given at handle's callback.
+
+Also, don't try to re-assign some value to your ``resultObject`` because you won't be able to listen to any changes.
+
+```js
+const Observer = require('@addr/object_observer');
+
+const observer = new Observer();
+let resultObject = observer.getObject(); // {}
+
+observer.subscribe('a', (newValue, propName, oldValue) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${oldValue} << to >> ${newValue} <<`);
+});
+
+resultObject = {
+    a: 1
+};
+
+resultObject.a = 3;
+
+// Nothing gets printed
+```
