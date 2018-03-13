@@ -216,8 +216,60 @@ console.log(resultObject);
 // { a: 3 }
 ```
 
-## Next step
+## Complex examples
 
-DONE: Currently, this listeners are triggered before the change happens. That might help you to do something before any change,
-but what happens if you want to overwrite/improve that change. Well, I'll be adding a new listener with a callback called
-after the change happens, so this way you can overwrite it or just return true and rollback te change.
+You can build the observer without any object and after that use the object given by the observer.
+And the ``oldValue`` parameter will be null because the attribute was created at the change moment.
+
+```js
+const Observer = require('@addr/object_observer');
+
+const observer = new Observer();
+const resultObject = observer.getObject(); // {}
+
+observer.subscribe('a', (newValue, propName, oldValue) => {
+    console.log(`Prop >> ${propName} << just changed from >> ${oldValue} << to >> ${newValue} <<`);
+});
+
+resultObject.a = 3;
+
+// Prop >> a << just changed from >> null << to >> 3 <<
+```
+
+In order to avoid infinite loop, don't use the object given by observer directly like this.
+
+```js
+const Observer = require('@addr/object_observer');
+
+const objectToObserve = {
+    a: 1
+};
+
+const observer = new Observer(objectToObserve);
+const resultObject = observer.getObject(); // { a: 1 } Same object
+
+observer.handle('a', (newValue, propName, oldValue, object) => {
+    console.log(`Prop >> ${propName} << current value at object >> ${object[propName]} << newValue parameter >> ${newValue} <<`);
+    resultObject[propName] = 4;
+});
+
+observer.subscribe('a', (newValue, propName, oldValue) => {
+    console.log(`Prop >> ${propName} << is about to change from >> ${objectToObserve[propName]} << to >> ${newValue} <<`);
+});
+
+resultObject.a = 3;
+// Prop >> a << is about to change from >> 1 << to >> 3 <<
+// Prop >> a << current value at object >> 3 << newValue parameter >> 3 <<
+// Prop >> a << is about to change from >> 3 << to >> 4 <<
+// Prop >> a << current value at object >> 4 << newValue parameter >> 4 <<
+// Prop >> a << is about to change from >> 4 << to >> 4 <<
+// Prop >> a << current value at object >> 4 << newValue parameter >> 4 <<
+// Prop >> a << is about to change from >> 4 << to >> 4 <<
+// Prop >> a << current value at object >> 4 << newValue parameter >> 4 <<
+// Prop >> a << is about to change from >> 4 << to >> 4 <<
+// Until it breaks
+
+console.log(resultObject);
+```
+
+Instead, use the ``object`` parameter given at handle's callback.

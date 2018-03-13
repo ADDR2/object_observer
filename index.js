@@ -69,7 +69,7 @@ class Observer {
         const handler = {
             set: (obj, prop, value) => {
                 try {
-                    const oldValue = obj? obj[prop] : null;
+                    const oldValue = obj[prop] || null;
                     this.emitter.emit(`changeOn${prop}`, value, prop, oldValue);
                     Reflect.set(obj, prop, value);
                     this.emitter.emit(`handleOn${prop}`, value, prop, oldValue, obj);
