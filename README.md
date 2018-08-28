@@ -96,7 +96,7 @@ const resultObject = observer.getObject(); // { b: 2 }
 
 resultObject.b = 3;
 
-// Prop >> b << just changed from >> 1 << to >> 3 <<
+// Prop >> b << just changed from >> 2 << to >> 3 <<
 
 console.log(objectToObserve);
 
@@ -132,29 +132,29 @@ To overwrite the change after it happened:
 
 ```js
 const Observer = require('@addr/object_observer');
-
+ 
 const objectToObserve = {
     a: 1
 };
-
+ 
 const observer = new Observer(objectToObserve);
 const resultObject = observer.getObject(); // { a: 1 } Same object
-
+ 
 observer.handle('a', (newValue, propName, oldValue, object) => {
-    console.log(`Prop >> ${propName} << just changed from >> ${object[propName]} << to >> ${newValue} <<`);
+    console.log(`Prop >> ${propName} << has >> ${object[propName]} << and before it had >> ${oldValue} <<`);
     object[propName] = 4;
 });
-
+ 
 observer.subscribe('a', (newValue, propName, oldValue) => {
     console.log(`Prop >> ${propName} << just changed from >> ${objectToObserve[propName]} << to >> ${newValue} <<`);
 });
-
+ 
 resultObject.a = 3;
 // Prop >> a << just changed from >> 1 << to >> 3 <<
-// Prop >> a << just changed from >> 3 << to >> 3 <<
-
-console.log(resultObject);
-// { a: 4 }
+// Prop >> a << has >> 3 << and before it had >> 1 <<
+ 
+console.log(resultObject, objectToObserve);
+// { a: 4 } { a: 4 }
 ```
 
 To rollback the change after it happened:
